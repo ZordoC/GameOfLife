@@ -16,25 +16,53 @@ char *choices[] = {
 
 // We need to define what are the parameters of our struct
 typedef struct cells {
-	int alive;
+	int current_state;
+	int next_state;
 }cell;
+
+int display_configuration(int configuration, cell **field)
+{
+	erase();
+	int middle_x=LINES/2;
+	int middle_y=COLS/2;
+
+	if(configuration==2)
+	{
+		field[middle_x][middle_y].current_state=1;
+		//field[middle_x+1][middle_y+1].current_state=1;
+		//field[middle_x+1][middle_y+2].current_state=1;
+		//field[middle_x+1][middle_y+3].current_state=1;
+	}
+}
 
 int main()
 {
+	// ***** Declaration of the variables *****
 	char welcomeMessage[]="Welcome to the Game Of Life";		/* message to be appeared on the screen */
 	char namesMessage[]="By blabla1 blabla2 blabla3 blabla4";
 
-	int inic_x =0;
-	int inic_y =0;
+	int inic_x =0; // to store the number of rows and 
+	int inic_y =0; // the number of colums of the screen 
 	int final_x =0;
-	int final_y =0;				/* to store the number of rows and *
-						 * the number of colums of the screen */
+	int final_y =0;
+	int key_played_on_menu;	//Int to nagvigate in the menu
+	int n_choices, i=0, j=0; // Number of choices for configuration and counter for for loop
+	int fsize = 20;
+						 
 
-	ITEM **configurations_choice;
-	int c;				
-	MENU *configuration_menu;
-	int n_choices, i;
-	ITEM *cur_item;
+	ITEM **configurations_choice; // list of configuration choices
+	ITEM *current_menu_item; 
+
+	MENU *configuration_menu; //configuration menu pointer
+
+	cell **field;
+
+	field = (cell **)calloc(LINES, sizeof(cell *));
+	for(i = 0;i < LINES; ++i)
+		field[i] = (cell *)calloc(COLS, sizeof(cell));
+
+	//*******************************************
+	//Welcome window
 
 	initscr();				/* start the curses mode */
 	getmaxyx(stdscr,final_x,final_y);		/* get the number of rows and columns */
@@ -47,6 +75,7 @@ int main()
 	refresh();
 	getch(); //Just waiting for user to press something
 	//********************************************************************
+
 	erase();
 	cbreak();
 	noecho();
@@ -60,31 +89,26 @@ int main()
 	configurations_choice[n_choices] = (ITEM *)NULL;
 
 	configuration_menu = new_menu((ITEM **)configurations_choice);
-	mvprintw(LINES - 2, 0, "F4 to Exit");
-	post_menu(configuration_menu);
+	mvprintw(LINES - 2, 0, "F4 to Exit"); //Print at the bottom how to quit the window to go back to the terminal
+	post_menu(configuration_menu); //Display the menu
 	refresh();
 
-	while((c = getch()) != KEY_F(4))
-	{   switch(c)
+	while((key_played_on_menu = getch()) != KEY_F(4))
+	{   switch(key_played_on_menu)
 	    {	case KEY_DOWN:
-		        menu_driver(configuration_menu, REQ_DOWN_ITEM);
+		        menu_driver(configuration_menu, REQ_DOWN_ITEM); //Key down will 
 				break;
 			case KEY_UP:
 				menu_driver(configuration_menu, REQ_UP_ITEM);
 				break;
 			case 10:	/* In case the user presses Enter */
 			{	char temp[200];
-				ITEM **items;
-
-				items = menu_items(configuration_menu);
+				
 				temp[0] = '\0';
-				for(i = 0; i < item_count(configuration_menu); ++i)
-					if(item_value(items[i]) == TRUE)
-					{	strcat(temp, item_name(items[i]));
-						strcat(temp, " ");
-					}
-				move(20, 0);
-				clrtoeol();
+
+				current_menu_item = current_item(configuration_menu); //Getting info about the selected item
+				display_configuration(item_index(current_menu_item), field); //Getting the index of the current item in the menu
+
 				mvprintw(20, 0, temp);
 				refresh();
 			}
@@ -93,7 +117,7 @@ int main()
 		}
 	}	
 
-	for(i=0;i<n_choices;n++)
+	for(i=0;i<n_choices;i++)
 	{
 		free_item(configurations_choice[i]);
 	}
