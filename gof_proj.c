@@ -199,3 +199,17 @@ for (i = 0; i < fsize; ++i)
 free(field); // free the array of pointers field
 */
 
+/*
+void display(WINDOW *win, state **area, int inic_x, int inic_y ,final_x, int final_y)
+{	int i, j;
+	wclear(win);
+	for(i = inic_x; i <= final_x; ++i)
+		for(j = inic_y;j <= final_y; ++j)
+			if(area[i][j].newstate == TRUE)
+				mvwaddch(win, j, i, CELL_CHAR);
+	wrefresh(win);
+}
+
+
+
+
