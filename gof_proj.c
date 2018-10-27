@@ -61,6 +61,21 @@ typedef struct cells {
 
 }
 
+int display_configuration(int configuration, cell **field)
+{
+	erase();
+	int middle_x=LINES/2;
+	int middle_y=COLS/2;
+
+	if(configuration==2)
+	{
+		field[middle_x][middle_y].current_state=1;
+		//field[middle_x+1][middle_y+1].current_state=1;
+		//field[middle_x+1][middle_y+2].current_state=1;
+		//field[middle_x+1][middle_y+3].current_state=1;
+	}
+}
+
 int main()
 {
 	// ***** Declaration of the variables *****
@@ -84,12 +99,18 @@ int main()
 	cell **field;
 
 	field = (cell **)calloc(LINES, sizeof(cell *));
+<<<<<<< HEAD
 	if (field == NULL) // Check if memory allocation is successfull (good practice) -josé 
 		return -1 ;
 	for(i = 0;i < LINES; ++i)
 		field[i] = (cell *)calloc(COLS, sizeof(cell));
 		if (field [i] == NULL)
 			return -1 ;
+=======
+	for(i = 0;i < LINES; ++i)
+		field[i] = (cell *)calloc(COLS, sizeof(cell));
+
+>>>>>>> display_updates
 	//*******************************************
 	//Welcome window
 
