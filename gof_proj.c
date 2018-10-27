@@ -19,20 +19,46 @@ typedef struct cells {
 	int current_state;
 	int next_state;
 }cell;
-
-int display_configuration(int configuration, cell **field)
+	
+	   int display_configuration(int configuration, cell **field)  // All the figures - José 
 {
 	erase();
-	int middle_x=LINES/2;
-	int middle_y=COLS/2;
+	int k=LINES/2;// middle x
+	int l=COLS/2; // midle y 
 
-	if(configuration==2)
+	if (configuration == 0 ) // DieHard
 	{
-		field[middle_x][middle_y].current_state=1;
-		//field[middle_x+1][middle_y+1].current_state=1;
-		//field[middle_x+1][middle_y+2].current_state=1;
-		//field[middle_x+1][middle_y+3].current_state=1;
+	field[k-2][l].current_state = 1 ;
+	field[k-2][l-1].current_state = 1;
+	field[k-3][l-1].current_state = 1 ;
+	field[k+2][l].current_state = 1 ;
+	field[k+3][l].current_state = 1 ;
+	field[k+4][l].current_state = 1 ;
+	field[k+3][l-2].current_state = 1 ;
+
 	}
+		else if (configuration == 1) // R-Pentomino
+		{
+		field[k][l].current_state = 1 ;
+		field[k][l+1].current_state = 1 ;
+		field[k][l-1].current_state = 1 ;
+		field[k+1][l-1].current_state= 1 ;
+		field[k-1][l].current_state = 1 ;
+		}	
+	
+		else if (configuration == 2 ) // Acron
+		{
+			field[k][l].current_state = 1 ;
+			field[k+1][l+1].current_state = 1 ;
+	r		field[k+2][l+1].current_state = 1 ;
+			field[k+3][l+1].current_state= 1 ;
+			field[k-2][l-1].current_state = 1 ;
+			field[k-2][l+1].current_state= 1 ;
+			field[k-3][l+1].current_state= 1 ;
+		}
+			else return -1 
+		
+
 }
 
 int main()
@@ -58,9 +84,12 @@ int main()
 	cell **field;
 
 	field = (cell **)calloc(LINES, sizeof(cell *));
+	if (field == NULL) // Check if memory allocation is successfull (good practice) -josé 
+		return -1 ;
 	for(i = 0;i < LINES; ++i)
 		field[i] = (cell *)calloc(COLS, sizeof(cell));
-
+		if (field [i] == NULL)
+			return -1 ;
 	//*******************************************
 	//Welcome window
 
@@ -143,13 +172,16 @@ int main()
 	// Array of pointers
 	int  fsize = 20;
 	cell **  field = (cell  **)  malloc(fsize * sizeof(cell  *));
-
-	int i=0;
+		if (field  == NULL )
+		return -1 ;
+ 	int i=0;
 	int j=0;
 
 	// Array of cells
 	for (i = 0; i < fsize; ++i)
 		field[i] = (cell *)  malloc(fsize * sizeof(cell ));
+		if(field == NULL )
+			return -1 ; 
 
 	printf("Please indicate the intial configuration you would like to effect\n");
 	printf("L :1\n");
@@ -179,7 +211,7 @@ while(getch() != KEY_F(1))
 					Each cell with one or no neighbors dies, as if by solitude.
 					Each cell with four or more neighbors dies, as if by overpopulation.
 					Each cell with two or three neighbors survives.
-
+						
 				Empty cells
 					Each cell with three neighbors becomes populated.
 				*/
